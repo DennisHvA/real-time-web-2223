@@ -95,7 +95,7 @@ Er zit heel erg veel in de api, maar ik gebruik alleen de naam en een afbeelding
 
 ## Deployment
 
-[whos-that-pokemon.up.railway.app](whos-that-pokemon.up.railway.app)
+[https://whos-that-pokemon.up.railway.app](https://whos-that-pokemon.up.railway.app)
 
 ## Installation
 
