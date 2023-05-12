@@ -19,15 +19,15 @@ dialog.showModal();
 const audio = new Audio('../audio/whois.mp3');
 
 socket.on('chat-message', data => {
-  appendMessage(`${getTime()}: ${data.name}: ${data.message}`)
+  appendMessage(`${data.name}: ${data.message}`)
 })
 
 socket.on('user-connected', name => {
-  appendMessage(`${getTime()}: ${name} connected`)
+  appendMessage(`${name} connected`)
 })
 
 socket.on('user-disconnected', name => {
-  appendMessage(`${getTime()}: ${name.username} disconnected`)
+  appendMessage(`${name.username} disconnected`)
 })
 
 socket.on('pokemon-connected', data => {
@@ -79,7 +79,7 @@ inputText.addEventListener('keypress', () => {
 
 socket.on('history', (history) => {
   history.forEach((message) => {
-    appendMessage(`${getTime()}: ${message.name}: ${message.message}`)
+    appendMessage(`${message.name}: ${message.message}`)
   })
 })
 
