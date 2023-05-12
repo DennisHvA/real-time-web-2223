@@ -125,9 +125,9 @@ function getTime() {
 const date = new Date().getFullYear();
 document.querySelector('time').innerHTML = date;
 
-if (socket.connected) {
-  socket.emit( /* ... */ );
-} else {
-  console.log('No connection');
-  appendMessage('No connection, please try again later')
-}
+// if (socket.connected) {
+//   socket.emit( /* ... */ );
+// } else {
+//   console.log('No connection');
+//   appendMessage('No connection, please try again later')
+// }
