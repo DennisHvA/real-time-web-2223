@@ -71,7 +71,6 @@ io.on('connection', (socket) => {
     while (history.length > historySize) {
       history.shift()
     }
-    // history.push(message)
     history.push({ message: message, name: users[socket.id].username })
     console.log(history)
 
@@ -81,17 +80,10 @@ io.on('connection', (socket) => {
       const name = users[socket.id].username
       io.emit('correct', { name: name, data: data.name })
       console.log('correct')
-      // console.log(data)
       console.log(users[socket.id].username)
       users[socket.id].points++
       updateUserList()
-      
       getNewPokemon()
-      // randomPokemon()
-      // .then(data  => {
-      //     io.emit("random-pokemon", data)
-      //     console.log(data.forms[0].name)
-      // })
     }
   })
 
@@ -129,10 +121,3 @@ function getNewPokemon() {
 http.listen(port, () => {
   console.log('listening on port ', port)
 })
-
-function skipPokemon() {
-  setTimeout(function() {
-    io.emit('correct', { name: name, data: data.name })
-    getNewPokemon()
-  }, 30000)
-}

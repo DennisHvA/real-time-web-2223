@@ -33,6 +33,7 @@ socket.on('user-disconnected', name => {
 socket.on('pokemon-connected', data => {
   pokemonImage.src = data.sprites.other.dream_world.front_default
   pokemonImage.alt = "pokemon image"
+  console.log(data.name)
   audio.play();
 })
 
@@ -58,14 +59,7 @@ socket.on("correct", (data) => {
   pokemonImage.style.filter = "brightness(100%)"
   pokemonName.textContent = data.data
   pokemonQM.style.display = "none"
-  // getNewPokemon()
 })
-
-// function getNewPokemon() {
-//   setTimeout(function () {
-//     socket.emit("new-pokemon");
-//   }, 5000);
-// }
 
 socket.on("random-pokemon", data => {
   pokemonImage.src = ""
@@ -75,7 +69,8 @@ socket.on("random-pokemon", data => {
   pokemonName.textContent = ""
 
   pokemonImage.src = data.sprites.other.dream_world.front_default
-  pokemonImage.alt = "pokemon image" 
+  pokemonImage.alt = "pokemon image"
+  console.log(data.name)
 })
 
 inputText.addEventListener('keypress', () => {
@@ -84,7 +79,6 @@ inputText.addEventListener('keypress', () => {
 
 socket.on('history', (history) => {
   history.forEach((message) => {
-    // appendMessage(message)
     appendMessage(`${getTime()}: ${message.name}: ${message.message}`)
   })
 })
@@ -124,10 +118,3 @@ function getTime() {
 
 const date = new Date().getFullYear();
 document.querySelector('time').innerHTML = date;
-
-// if (socket.connected) {
-//   socket.emit( /* ... */ );
-// } else {
-//   console.log('No connection');
-//   appendMessage('No connection, please try again later')
-// }
