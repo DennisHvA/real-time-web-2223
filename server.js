@@ -5,59 +5,134 @@ const path = require('path')
 const io = require('socket.io')(http)
 const port = process.env.PORT || 4242
 
+app.use(express.static(path.resolve('public')))
+
+const { engine } = require('express-handlebars');
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('views', './views');
+
+const fetch = require('node-fetch')
+
+let data;
+
+const randomPokemon = async () => {
+  let number = Math.floor(Math.random() * 151);
+  const endpoint = `https://pokeapi.co/api/v2/pokemon/`
+  const url = `${endpoint}` + number
+  const pokeData = await fetchData(url)
+  data = pokeData
+  return data
+}
+
+async function fetchData(url){
+  const apiData = await fetch(url)
+      .then(response => response.json())
+      .catch(err => console.log(err))
+  return apiData
+};
+
+app.get('/', (req, res) => {
+  res.render('index');
+});
+
+let users = []
+
 const historySize = 50
 let history = []
 
-app.use(express.static(path.resolve('public')))
-
-// database
-// const connectDB = require('./config/db');
-// connectDB();
-
 io.on('connection', (socket) => {
-  console.log('a user connected')
-  io.emit('history', history)
 
-  // socket.on('message', (message) => {
-  //   while (history.length > historySize) {
-  //     history.shift()
-  //   }
-  //   history.push(message)
-  //   console.log('message')
+  socket.emit('history', history)
 
-  //   io.emit('message', message)
-  // })
+  socket.on('new-user', name => {
+    users[socket.id] = {
+      username: name,
+      points: 0,
+      id: socket.id
+    }
 
-  socket.on('chat', (data) => {
-    console.log(data);
+    socket.broadcast.emit('user-connected', name)
+    updateUserList()
+    randomPokemon()    
+    .then(data  => {
+      console.log(data.forms[0].name)
+      io.emit('pokemon-connected', data)
+    })
+  })
+
+  socket.on('typing', () => {
+    socket.broadcast.emit("typing", { name: users[socket.id].username });
+  });
+
+  socket.on('send-chat-message', message => {
+    console.log(message)
 
     while (history.length > historySize) {
-        history.shift()
-      }
-      history.push(data)
+      history.shift()
+    }
+    // history.push(message)
+    history.push({ message: message, name: users[socket.id].username })
+    console.log(history)
 
-    //data from script.js (name and message)
-    io.sockets.emit("chat", data);
-  });
+    socket.broadcast.emit('chat-message', { message: message, name: users[socket.id].username })
 
-  socket.on('typing', (inputName) => {
-    console.log("Aan het typen");
-    socket.broadcast.emit("typing", inputName);
-  });
+    if (message == data.name) {
+      const name = users[socket.id].username
+      io.emit('correct', { name: name, data: data.name })
+      console.log('correct')
+      // console.log(data)
+      console.log(users[socket.id].username)
+      users[socket.id].points++
+      updateUserList()
+      
+      getNewPokemon()
+      // randomPokemon()
+      // .then(data  => {
+      //     io.emit("random-pokemon", data)
+      //     console.log(data.forms[0].name)
+      // })
+    }
+  })
 
+  socket.on("new-pokemon", ()=>{
+    randomPokemon()
+    .then(data  => {
+        io.emit("random-pokemon", data)
+        console.log(data.forms[0].name)
+    })
+  })
 
   socket.on('disconnect', () => {
-    console.log('user disconnected')
+    const name = users[socket.id]
+    delete users[socket.id]
+    socket.broadcast.emit('user-disconnected', name)
+    updateUserList()
   })
+
+  function updateUserList() {
+    console.log(users)
+    io.emit('user-list', Object.values(users))
+  }
 })
 
-// io.on('connection', (socket) => {
-//   socket.on('send-nickname', (nickname) => {
-//       socket.nickname = nickname;
-//       io.emit("send-nickname", socket.nickname);
-//   });
-// });
+function getNewPokemon() {
+  setTimeout(function () {
+    randomPokemon()
+      .then(data  => {
+          io.emit("random-pokemon", data)
+          console.log(data.forms[0].name)
+    })
+  }, 5000);
+}
 
 http.listen(port, () => {
   console.log('listening on port ', port)
 })
+
+function skipPokemon() {
+  setTimeout(function() {
+    io.emit('correct', { name: name, data: data.name })
+    getNewPokemon()
+  }, 30000)
+}

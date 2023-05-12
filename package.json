@@ -23,9 +23,10 @@
   },
   "homepage": "https://github.com/ju5tu5/barebonechat#readme",
   "dependencies": {
-    "dotenv": "^16.0.3",
     "express": "^4.17.1",
-    "mongoose": "^7.0.4",
+    "express-handlebars": "^7.0.7",
+    "http": "^0.0.1-security",
+    "node-fetch": "^2.6.9",
     "socket.io": "^4.0.0"
   },
   "devDependencies": {

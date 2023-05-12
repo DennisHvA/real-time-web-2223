@@ -1,0 +1,24 @@
+<section class="pokemon">
+    <section class="animation">
+        <img class="pokeball" src="./images/pokeball.svg" alt="">
+        <img class="explosion" src="./images/explosion.svg" alt="">
+    </section>
+
+    {{#if data.sprites.other.dream_world.front_default}}
+    <img src="{{data.sprites.other.dream_world.front_default}}" alt="">
+    {{else}}
+    <img src="./images/pikachu.svg" alt="">
+    {{/if}}
+
+    <section>
+        <section class="result">
+            <img class="qmark" src="/images/qmark.svg" alt="">
+            {{#if data.name}}
+            <h1>{{data.name}}</h1>
+            {{else}}
+            <h1></h1>
+            {{/if}} 
+        </section>
+        <img class="logo" src="/images/logo.svg" alt="">
+    </section>
+</section>

@@ -7,21 +7,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat</title>
   <link rel="stylesheet" href="/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
   <main>
     <section>
-      <ul></ul>
+      <ul id="chat"></ul>
       <p></p>
       <form>
         <input type="text" placeholder="Naam" id="name" autocomplete="off">
-        <fieldset>
-          <input type="text" placeholder="Message" id="message" autocomplete="off">
-          <button><span>Send</span></button>
-        </fieldset>
+        <button><span>Send</span></button>
       </form>
+      <form>
+        <input type="text" placeholder="Message" id="message" autocomplete="off">
+        <button><span>Send</span></button>
+      </form>
+    </section>
+    <section>
+      <ul id="users"></ul>
     </section>
   </main>
 
